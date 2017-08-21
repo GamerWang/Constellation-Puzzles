@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
 	public int AngularVelocity = 50;
+	public Vector3 StartRotation = new Vector3 (15, -135, -15);
 	public Vector3 moveVector{ set; get; }
 
 	MouseData mouseData = new MouseData();
@@ -35,6 +36,11 @@ public class CameraMove : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		if (target != null) {
+			transform.RotateAround(target.transform.position, new Vector3(0,1,0), StartRotation.y);
+			transform.RotateAround(target.transform.position, new Vector3(0,0,1), StartRotation.z);
+			transform.RotateAround(target.transform.position, new Vector3(1,0,0), StartRotation.x);
+		}
 	}
 	
 	// Update is called once per frame
@@ -45,8 +51,10 @@ public class CameraMove : MonoBehaviour {
 			return dir;
 		};
 		if (target != null) {
-			moveVector = RotateWithView ();
-			transform.RotateAround(target.transform.position, moveVector, Time.deltaTime * AngularVelocity);
+			if (Controllable()) {
+				moveVector = RotateWithView ();
+				transform.RotateAround(target.transform.position, moveVector, Time.deltaTime * AngularVelocity);
+			}
 		}
 	}
 
@@ -67,5 +75,22 @@ public class CameraMove : MonoBehaviour {
 			dir.y = Input.GetAxisRaw ("Horizontal");
 		}
 		return dir;
+	}
+
+	bool Controllable(){
+		var r = transform.eulerAngles;
+		// var v = new Vector3 (Math.Abs(r.x), Math.Abs(r.y), Math.Abs(r.z));
+		var v = new Vector3 (r.x,r.y, r.z);
+		if (v.x > 180)
+			v.x -= 360;
+		if (v.y > 180)
+			v.y -= 360;
+		if (v.z > 180)
+			v.z -= 360;
+		v.x = Math.Abs (v.x);
+		v.y = Math.Abs (v.y);
+		v.z = Math.Abs (v.z);
+		Debug.Log ("CameraMove Controllable : "+(v.x <= 1 && v.y <= 1 && v.z <= 5));
+		return !(v.x <= 1 && v.y <= 1 && v.z <= 5);
 	}
 }
