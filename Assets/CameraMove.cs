@@ -6,8 +6,11 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
 	public int AngularVelocity = 50;
+	public float resetVelocity = 0.5f;
+	public float resetAngularVelocity = 2.0f;
 	public Vector3 StartRotation = new Vector3 (15, -135, -15);
 	public Vector3 moveVector{ set; get; }
+	public bool Controllable{ get; private set;}
 
 	MouseData mouseData = new MouseData();
 
@@ -41,6 +44,7 @@ public class CameraMove : MonoBehaviour {
 			transform.RotateAround(target.transform.position, new Vector3(0,0,1), StartRotation.z);
 			transform.RotateAround(target.transform.position, new Vector3(1,0,0), StartRotation.x);
 		}
+		Controllable = true;
 	}
 	
 	// Update is called once per frame
@@ -51,9 +55,23 @@ public class CameraMove : MonoBehaviour {
 			return dir;
 		};
 		if (target != null) {
-			if (Controllable()) {
+			if (Controllable) {
 				moveVector = RotateWithView ();
-				transform.RotateAround(target.transform.position, moveVector, Time.deltaTime * AngularVelocity);
+				transform.RotateAround (target.transform.position, moveVector, Time.deltaTime * AngularVelocity);
+				if (!IsControllable ()) {
+					Controllable = IsControllable ();
+					// action here
+				}
+			} else {
+				if (!IsPositionReset ()) {
+					transform.RotateAround (target.transform.position, GetAxis (), Time.deltaTime * resetVelocity);
+				} else if (!IsRotationReset ()) {
+					var rotationZ = transform.eulerAngles.z;
+					if (rotationZ > 180)
+						rotationZ -= 360;
+					var direction = rotationZ > 0 ? -1 : 1;
+					transform.Rotate (0, 0, direction * Time.deltaTime * resetAngularVelocity);
+				}
 			}
 		}
 	}
@@ -77,9 +95,8 @@ public class CameraMove : MonoBehaviour {
 		return dir;
 	}
 
-	bool Controllable(){
+	bool IsControllable(){
 		var r = transform.eulerAngles;
-		// var v = new Vector3 (Math.Abs(r.x), Math.Abs(r.y), Math.Abs(r.z));
 		var v = new Vector3 (r.x,r.y, r.z);
 		if (v.x > 180)
 			v.x -= 360;
@@ -90,7 +107,45 @@ public class CameraMove : MonoBehaviour {
 		v.x = Math.Abs (v.x);
 		v.y = Math.Abs (v.y);
 		v.z = Math.Abs (v.z);
-		Debug.Log ("CameraMove Controllable : "+(v.x <= 1 && v.y <= 1 && v.z <= 5));
-		return !(v.x <= 1 && v.y <= 1 && v.z <= 5);
+		return !(v.x <= 2 && v.y <= 2 && v.z <= 5);
+	}
+
+	bool IsDefaultPos(){
+		var r = transform.eulerAngles;
+		var p = transform.position;
+		bool isRotationReset = (r.x == 0 && r.y == 0 && r.z == 0);
+		bool isPositionReset = (p.x == 0 && p.y == 0 && p.z == 0);
+		return isRotationReset && isPositionReset;
+	}
+
+	bool IsPositionReset(){
+		var p = transform.position;
+		bool isPositionReset = (Math.Abs (p.x) <= 0.06 && Math.Abs (p.y) <= 0.06 && Math.Abs (p.z + 10) <= 0.01);
+		return isPositionReset;
+	}
+
+	bool IsRotationReset(){
+		var r = new Vector3 (transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+		if (r.x > 180)
+			r.x -= 360;
+		if (r.y > 180)
+			r.y -= 360;
+		if (r.z > 180)
+			r.z -= 360;
+		r.x = Math.Abs (r.x);
+		r.y = Math.Abs (r.y);
+		r.z = Math.Abs (r.z);
+		bool isRotationReset = (r.x <= 0.5 && r.y <= 0.5 && r.z <= 0.1);
+		return isRotationReset;
+	}
+
+	Vector3 GetAxis(){
+		var aimPos = new Vector3 (0, 0, -10);
+		var currentPos = transform.position;
+		var axisX = currentPos.y * aimPos.z - currentPos.z * aimPos.y;
+		var axisY = currentPos.z * aimPos.x - currentPos.x * aimPos.z;
+		var axisZ = currentPos.x * aimPos.y - currentPos.y * aimPos.x;
+		var axis = new Vector3 (axisX, axisY, axisZ);
+		return axis;
 	}
 }
