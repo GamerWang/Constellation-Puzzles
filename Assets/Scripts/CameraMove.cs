@@ -6,7 +6,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
 	public int AngularVelocity = 50;
-	public float resetVelocity = 0.5f;
+	public float resetVelocity = 0.3f;
 	public float resetAngularVelocity = 2.0f;
 	public Vector3 StartRotation = new Vector3 (15, -135, -15);
 	public Vector3 moveVector{ set; get; }
@@ -65,7 +65,8 @@ public class CameraMove : MonoBehaviour {
 			} else {
 				if (!IsPositionReset ()) {
 					transform.RotateAround (target.transform.position, GetAxis (), Time.deltaTime * resetVelocity);
-				} else if (!IsRotationReset ()) {
+				} 
+				if (!IsRotationReset ()) {
 					var rotationZ = transform.eulerAngles.z;
 					if (rotationZ > 180)
 						rotationZ -= 360;
@@ -107,7 +108,7 @@ public class CameraMove : MonoBehaviour {
 		v.x = Math.Abs (v.x);
 		v.y = Math.Abs (v.y);
 		v.z = Math.Abs (v.z);
-		return !(v.x <= 2 && v.y <= 2 && v.z <= 5);
+		return !(v.x <= 1.5 && v.y <= 1.5 && v.z <= 5);
 	}
 
 	bool IsDefaultPos(){
