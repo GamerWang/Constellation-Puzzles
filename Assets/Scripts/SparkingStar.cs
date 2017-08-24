@@ -8,7 +8,7 @@ public class SparkingStar : MonoBehaviour {
 	Animator anim;
 
 	void Awake() {
-		anim = GetComponent <Animator> ();
+        anim = GetComponent<Animator>();
         Shine = false;
 	}
 

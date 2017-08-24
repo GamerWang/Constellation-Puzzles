@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
     public GameObject Constellation;
+    public GameObject TextMask;
 	public int AngularVelocity = 50;
 	public float resetVelocity = 0.3f;
 	public float resetAngularVelocity = 2.0f;
@@ -63,6 +64,7 @@ public class CameraMove : MonoBehaviour {
 					Controllable = IsControllable ();
                     // action here
                     Constellation.GetComponent<ConstellationControl>().StartShine();
+                    TextMask.GetComponent<MaskControll>().Reveal();
 				}
 			} else {
 				if (!IsPositionReset ()) {

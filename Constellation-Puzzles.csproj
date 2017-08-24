@@ -78,8 +78,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ConstellationControl.cs" />
     <Compile Include="Assets\Scripts\CameraMove.cs" />
+    <Compile Include="Assets\Scripts\ConstellationControl.cs" />
+    <Compile Include="Assets\Scripts\MaskControll.cs" />
     <Compile Include="Assets\Scripts\SparkingStar.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
