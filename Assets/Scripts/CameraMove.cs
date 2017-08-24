@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
+    public GameObject Constellation;
 	public int AngularVelocity = 50;
 	public float resetVelocity = 0.3f;
 	public float resetAngularVelocity = 2.0f;
@@ -60,7 +61,8 @@ public class CameraMove : MonoBehaviour {
 				transform.RotateAround (target.transform.position, moveVector, Time.deltaTime * AngularVelocity);
 				if (!IsControllable ()) {
 					Controllable = IsControllable ();
-					// action here
+                    // action here
+                    Constellation.GetComponent<ConstellationControl>().StartShine();
 				}
 			} else {
 				if (!IsPositionReset ()) {
