@@ -75,6 +75,7 @@ public class CameraMove : MonoBehaviour {
 					if (rotationZ > 180)
 						rotationZ -= 360;
 					var direction = rotationZ > 0 ? -1 : 1;
+                    
 					transform.Rotate (0, 0, direction * Time.deltaTime * resetAngularVelocity);
 				}
 			}
@@ -147,10 +148,12 @@ public class CameraMove : MonoBehaviour {
 	Vector3 GetAxis(){
 		var aimPos = new Vector3 (0, 0, -10);
 		var currentPos = transform.position;
-		var axisX = currentPos.y * aimPos.z - currentPos.z * aimPos.y;
-		var axisY = currentPos.z * aimPos.x - currentPos.x * aimPos.z;
-		var axisZ = currentPos.x * aimPos.y - currentPos.y * aimPos.x;
-		var axis = new Vector3 (axisX, axisY, axisZ);
+        // Bellow is the former get cross function
+		// var axisX = currentPos.y * aimPos.z - currentPos.z * aimPos.y;
+		// var axisY = currentPos.z * aimPos.x - currentPos.x * aimPos.z;
+		// var axisZ = currentPos.x * aimPos.y - currentPos.y * aimPos.x;
+		// var axis = new Vector3 (axisX, axisY, axisZ);
+        var axis = Vector3.Cross(currentPos, aimPos);
 		return axis;
 	}
 }
