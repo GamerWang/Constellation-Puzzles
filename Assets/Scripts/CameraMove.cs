@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
-    public GameObject Manager;
+    public GameObject SceneManager;
+    public GameObject AudioManager;
 	public int AngularVelocity = 50;
 	public float resetVelocity = 0.3f;
 	public float resetAngularVelocity = 2.0f;
@@ -66,7 +67,8 @@ public class CameraMove : MonoBehaviour {
 				if (!IsControllable ()) {
 					Controllable = IsControllable ();
                     // action here
-                    Manager.GetComponent<SceneManager>().Founded();
+                    SceneManager.GetComponent<SceneManager>().Founded();
+                    AudioManager.GetComponent<AudioManager>().Ding();
 				}
 			} else {
 				if (!IsPositionReset ()) {
