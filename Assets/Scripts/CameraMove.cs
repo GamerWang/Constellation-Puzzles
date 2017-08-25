@@ -5,12 +5,10 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour {
 	public GameObject target = null;
-    public GameObject Constellation;
-    public GameObject TextMask;
+    public GameObject Manager;
 	public int AngularVelocity = 50;
 	public float resetVelocity = 0.3f;
 	public float resetAngularVelocity = 2.0f;
-	public Vector3 StartRotation = new Vector3 (15, -135, -15);
 	public Vector3 moveVector{ set; get; }
 	public bool Controllable{ get; private set;}
 
@@ -39,13 +37,18 @@ public class CameraMove : MonoBehaviour {
 		}
 	}
 
+    public void Rotate(Vector3 startRotation)
+    {
+        if (target != null)
+        {
+            transform.RotateAround(target.transform.position, new Vector3(0, 1, 0), startRotation.y);
+            transform.RotateAround(target.transform.position, new Vector3(0, 0, 1), startRotation.z);
+            transform.RotateAround(target.transform.position, new Vector3(1, 0, 0), startRotation.x);
+        }
+    }
+
 	// Use this for initialization
 	void Start () {
-		if (target != null) {
-			transform.RotateAround(target.transform.position, new Vector3(0,1,0), StartRotation.y);
-			transform.RotateAround(target.transform.position, new Vector3(0,0,1), StartRotation.z);
-			transform.RotateAround(target.transform.position, new Vector3(1,0,0), StartRotation.x);
-		}
 		Controllable = true;
 	}
 	
@@ -63,8 +66,7 @@ public class CameraMove : MonoBehaviour {
 				if (!IsControllable ()) {
 					Controllable = IsControllable ();
                     // action here
-                    Constellation.GetComponent<ConstellationControl>().StartShine();
-                    TextMask.GetComponent<MaskControll>().Reveal();
+                    Manager.GetComponent<SceneManager>().Founded();
 				}
 			} else {
 				if (!IsPositionReset ()) {
