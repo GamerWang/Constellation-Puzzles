@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 0d9984bd744d74272bfa699795ddf54b
+timeCreated: 1503673752
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Calling Angels Personal Use
+  fontNames:
+  - Calling Angels Personal Use
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
